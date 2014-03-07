@@ -47,14 +47,14 @@ function main( $method, $url ) {
  *
  */
 
-function dumpMedia( Essence\Media $Media ) {
+function dumpMedia( $Media ) {
 
 	if ( !$Media ) {
 		echo "No results.\n";
 		return;
 	}
 
-	$data = array( );
+	$data = [ ];
 
 	foreach ( $Media as $key => $value ) {
 		if ( $value ) {

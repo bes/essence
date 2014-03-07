@@ -49,7 +49,7 @@ class Collection {
 	 *	@var array
 	 */
 
-	protected $_properties = array( );
+	protected $_properties = [ ];
 
 
 
@@ -59,7 +59,7 @@ class Collection {
 	 *	@var array
 	 */
 
-	protected $_providers = array( );
+	protected $_providers = [ ];
 
 
 
