@@ -100,13 +100,13 @@ class CollectionTest extends PHPUnit_Framework_TestCase {
 
 	public function testProviders( ) {
 
-		$providers = array( );
+		$providers = [ ];
 		$generator = $this->Collection->providers( 'foo' );
 
 		foreach ( $generator as $provider ) {
 			$providers[ ] = $provider;
 		}
 
-		$this->assertEquals( array( $this->Provider ), $providers );
+		$this->assertEquals([ $this->Provider ], $providers );
 	}
 }
