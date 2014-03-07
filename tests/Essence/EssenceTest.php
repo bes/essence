@@ -158,6 +158,25 @@ HTML;
 	 *
 	 */
 
+	public function testLazyEmbedAll( ) {
+
+		$urls = array( 'one', 'two' );
+		$medias = array( );
+		$generator = $this->Essence->embedAll( $urls );
+
+		foreach ( $generator as $url => $Media ) {
+			$medias[ $url ] = $Media;
+		}
+
+		$this->assertEquals( $urls, array_keys( $medias ));
+	}
+
+
+
+	/**
+	 *
+	 */
+
 	public function testReplaceSingleUrl( ) {
 
 		$this->assertEquals(

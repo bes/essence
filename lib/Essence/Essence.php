@@ -304,6 +304,23 @@ class Essence {
 
 
 	/**
+	 *	Fetches embed informations from the given URLs.
+	 *
+	 *	@param array $urls An array of URLs to fetch informations from.
+	 *	@param array $options Custom options to be interpreted by a provider.
+	 *	@yield Essence\Media Embed informations, indexed by URL.
+	 */
+
+	public function lazyEmbedAll( array $urls, array $options = array( )) {
+
+		foreach ( $urls as $url ) {
+			yield $url => $this->embed( $url, $options );
+		}
+	}
+
+
+
+	/**
 	 *	Replaces URLs in the given text by media informations if they point on
 	 *	an embeddable resource.
 	 *	By default, links will be replaced by the html property of Media.
