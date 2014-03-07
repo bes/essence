@@ -125,22 +125,17 @@ class Collection {
 	/**
 	 *	Finds providers of the given url.
 	 *
-	 *	@todo Use PHP generators to yield providers.
 	 *	@param string $url An url which may be embedded.
 	 *	@return array An array of Essence\Provider.
 	 */
 
 	public function providers( $url ) {
 
-		$providers = array( );
-
 		foreach ( $this->_properties as $name => $config ) {
 			if ( $this->_matches( $config['filter'], $url )) {
-				$providers[ ] = $this->_provider( $name, $config );
+				yield $this->_provider( $name, $config );
 			}
 		}
-
-		return $providers;
 	}
 
 
