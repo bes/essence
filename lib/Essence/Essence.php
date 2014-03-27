@@ -161,9 +161,13 @@ class Essence {
 	 *	@return array An array of extracted URLs.
 	 */
 
-	protected function _extract( $source ) {
+	protected function _extract( $source, $baseUrl = '' ) {
 
 		if ( filter_var( $source, FILTER_VALIDATE_URL )) {
+			if ( empty( $baseUrl )) {
+				$baseUrl = $source;
+			}
+
 			try {
 				$source = $this->_Http->get( $source );
 			} catch ( Exception $Exception ) {
@@ -180,13 +184,48 @@ class Essence {
 		$urls = $this->_extractUrls( $source );
 		$embeddable = [ ];
 
+		if ( $baseUrl ) {
+			$components = $this->_parse( $baseUrl );
+		}
+
 		foreach ( $urls as $url ) {
+			if ( $baseUrl && strpos( $url, '/' ) === 0 ) {
+				// if the URL starts with //, we only need to prepend the
+				// correct scheme
+				if ( strpos( $url, '/', 1 ) === 1 ) {
+					$url = $components['scheme'] . ':' . $url;
+
+				// if it starts with /, we need to prepend the full base URL
+				} else {
+					$url = $components['base'] . $url;
+				}
+			}
+
 			if ( $this->_Collection->hasProvider( $url )) {
 				$embeddable[ ] = $url;
 			}
 		}
 
 		return array_unique( $embeddable );
+	}
+
+
+
+	/**
+	 *
+	 */
+
+	protected function _parse( $url ) {
+
+		$components = parse_url( $url );
+		$scheme = isset( $components['scheme'])
+			? $components['scheme']
+			: 'http';
+
+		return [
+			'scheme' => $scheme,
+			'base' => $scheme . '://' . $components['host']
+		];
 	}
 
 
