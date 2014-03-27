@@ -212,7 +212,10 @@ class Essence {
 
 
 	/**
+	 *	Parses the given URL and returns its scheme and full base.
 	 *
+	 *	@param string $url URL to parse.
+	 *	@return array Components.
 	 */
 
 	protected function _parse( $url ) {
