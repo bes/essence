@@ -8,6 +8,7 @@
 namespace Essence\Media;
 
 use Essence\Media;
+use Essence\Utility\Template;
 
 
 
@@ -23,9 +24,22 @@ class Preparator {
 	 *
 	 */
 
+	const generic = 'generic';
+
+
+
+	/**
+	 *
+	 */
+
 	protected $_defaults = [
 		'width' => 640,
-		'height' => 490
+		'height' => 490,
+		'templates' => [
+			'photo' => '<img src=":url" alt=":description" width=":width" height=":height" />',
+			'video' => '<iframe src=":url" width=":width" height=":height" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen />',
+			'generic' => '<a href=":url" alt=":description">:title</a>'
+		]
 	];
 
 
@@ -44,46 +58,20 @@ class Preparator {
 			return;
 		}
 
-		$title = htmlspecialchars( $Media->get( 'title', $Media->url ));
-		$description = $Media->has( 'description' )
-			? htmlspecialchars( $Media->description )
-			: $title;
-
 		$options += $this->_defaults;
-		$width = $Media->setDefault( 'width', $options['width']);
-		$height = $Media->setDefault( 'height', $options['height']);
 
-		switch ( $Media->type ) {
-			// builds an <img> tag pointing to the photo
-			case 'photo':
-				$Media->set( 'html', sprintf(
-					'<img src="%s" alt="%s" width="%d" height="%d" />',
-					$Media->url,
-					$description,
-					$width,
-					$height
-				));
-				break;
+		$Media->setDefault( 'title', $Media->get( 'url' ));
+		$Media->setDefault( 'description', $Media->get( 'title' ));
+		$Media->setDefault( 'width', $options['width']);
+		$Media->setDefault( 'height', $options['height']);
 
-			// builds an <iframe> tag pointing to the video
-			case 'video':
-				$Media->set( 'html', sprintf(
-					'<iframe src="%s" width="%d" height="%d" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen />',
-					$Media->url,
-					$width,
-					$height
-				));
-				break;
+		$type = isset( $options['templates'][ $Media->type ])
+			? $Media->type
+			: self::generic;
 
-			// builds an <a> tag pointing to the original resource
-			default:
-				$Media->set( 'html', sprintf(
-					'<a href="%s" alt="%s">%s</a>',
-					$Media->url,
-					$description,
-					$title
-				));
-				break;
-		}
+		$Media->set( 'html', Template::compile(
+			$options['templates'][ $type ],
+			$Media->properties( )
+		));
 	}
 }
