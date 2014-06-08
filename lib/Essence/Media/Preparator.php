@@ -38,7 +38,7 @@ class Preparator {
 		'templates' => [
 			'photo' => '<img src=":url" alt=":description" width=":width" height=":height" />',
 			'video' => '<iframe src=":url" width=":width" height=":height" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen />',
-			'generic' => '<a href=":url" alt=":description">:title</a>'
+			self::generic => '<a href=":url" alt=":description">:title</a>'
 		]
 	];
 
@@ -65,9 +65,11 @@ class Preparator {
 		$Media->setDefault( 'width', $options['width']);
 		$Media->setDefault( 'height', $options['height']);
 
-		$type = isset( $options['templates'][ $Media->type ])
-			? $Media->type
-			: self::generic;
+		$type = $Media->get( 'type' );
+
+		if ( !isset( $options['templates'][ $type ])) {
+			$type = self::generic;
+		}
 
 		$Media->set( 'html', Template::compile(
 			$options['templates'][ $type ],
